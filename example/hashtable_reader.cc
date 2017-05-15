@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         }
         else
         {
-            printf("isExist: key:%s, isExist:%s\n", argv[2], isExist);
+            printf("isExist: key:%s, isExist:%d\n", argv[2], isExist);
         }
     }
     else if (strcmp(argv[1], "pr") == 0)
@@ -91,9 +91,13 @@ int main(int argc, char* argv[])
                 printf("shmTable getNext failed! shmKey:%d, index:%d\n", SHM_KEY, index);
                 break;
             }
-            else
+            else if (ret != kErrTraverseTableEnd)
             {
                 printf("getNext: key:%s, value:%s\n", key.c_str(), val.c_str());
+            }
+            else if (ret == kErrTraverseTableEnd)
+            {
+                break;
             }
         }
     }

@@ -16,7 +16,7 @@ MrswHashtable gShmTable;
 int main(int argc, char* argv[])
 {
     ErrorCode ret;
-    ret = gShmTable.init(SHM_KEY);
+    ret = gShmTable.init(SHM_KEY, 500);
     if (ret != kOk)
     {
         printf("[main] shmTable init failed! shmKey:%d, errCode:%d\n", SHM_KEY, ret);
@@ -31,11 +31,25 @@ int main(int argc, char* argv[])
     }
 
     int lastSet = 0;
+    bool lastIsDelete = false;
     char keyStr[128] = {0};
     char valStr[128] = {0};
     for (int index = 0; index < 10000; index++)
     {
-        if (rand()%2 == 0)
+        if (rand()%2 == 0 && lastIsDelete == false)
+        {
+            snprintf(keyStr, 128, "key%d", lastSet);
+            ret = gShmTable.deleteKey(keyStr);
+            if (ret != kOk)
+            {
+                printf("[main] shmTable deleteKey failed! shmKey:%d, key:%s, errCode:%d\n",
+                       SHM_KEY, keyStr, ret);
+                return 0;
+            }
+            printf("[main] deleteKey: key:%s\n", keyStr);
+            lastIsDelete = true;
+        }
+        else
         {
             snprintf(keyStr, 128, "key%d", index);
             snprintf(valStr, 128, "value%d", index);
@@ -46,18 +60,9 @@ int main(int argc, char* argv[])
                        SHM_KEY, keyStr, valStr, ret);
                 return 0;
             }
+            printf("[main] setValue: key:%s, value:%s\n", keyStr, valStr);
             lastSet = index;
-        }
-        else
-        {
-            snprintf(keyStr, 128, "key%d", lastSet);
-            ret = gShmTable.deleteKey(keyStr);
-            if (ret != kOk)
-            {
-                printf("[main] shmTable deleteKey failed! shmKey:%d, key:%s, errCode:%d\n",
-                       SHM_KEY, keyStr, ret);
-                return 0;
-            }
+            lastIsDelete = false;
         }
         sleep(10);
     }

@@ -120,10 +120,10 @@ ErrorCode MrswHashtable::initLruMem(qhasharr_t* tbl)
             }
         }
         else if (ret == kErrTraverseTableEnd)
-        {}
+        { break;}
         else
         {
-            fprintf(stderr, "[initLruMem] Failed to get next item in shmtbl");
+            fprintf(stderr, "[initLruMem] Failed to get next item in shmtbl. errCode:%d\n", ret);
             return kErrLruInit;
         }
     }
@@ -132,7 +132,7 @@ ErrorCode MrswHashtable::initLruMem(qhasharr_t* tbl)
 
 ErrorCode MrswHashtable::getNextKVPair(qhasharr_t *tbl, std::string &tblkey, std::string &tblval, int &idx)
 {
-    if (!isInit() || NULL == tbl) return kErrInvalidParams;
+    if (NULL == tbl) return kErrInvalidParams;
 
     qnobj_t obj;
     memset(&obj, 0, sizeof(qnobj_t));
@@ -143,9 +143,9 @@ ErrorCode MrswHashtable::getNextKVPair(qhasharr_t *tbl, std::string &tblkey, std
     if (!status)
     {
         idx++;
-        if (ENOENT == errno && idx == (tbl->maxslots+1)) return kErrTraverseTableEnd;
+        if (ENOENT == errno && idx >= (tbl->maxslots+1)) return kErrTraverseTableEnd;
 
-        fprintf(stderr, "[getNextKVPair] qhasharr_getnext failed! idx:%d, errno:%d", idx-1, errno);
+        fprintf(stderr, "[getNextKVPair] qhasharr_getnext failed! idx:%d, errno:%d\n", idx-1, errno);
         return kErrNotFound;
     }
 
