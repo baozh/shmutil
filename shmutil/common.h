@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <errno.h>
 
 inline void encodeValueLen(char* buf, uint32_t len)
 {

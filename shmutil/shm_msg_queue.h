@@ -45,9 +45,9 @@ public:
     ErrorCode clearMQ();
     ErrorCode enqueue(const void* data, uint32_t dataLen);
     ErrorCode dequeue(void* buf, uint32_t bufSize, uint32_t& dataLen);
-    inline ErrorCode getstat(MQStat& mqStat);
-    inline ErrorCode __attribute__((always_inline)) isEmpty(bool& isEmpty);
-    inline ErrorCode __attribute__((always_inline)) getMsgCount(int& msgCount);
+    ErrorCode getstat(MQStat& mqStat);
+    ErrorCode isEmpty(bool& isEmpty);
+    ErrorCode getMsgCount(int& msgCount);
 
 private:
     ShmMQ(const ShmMQ&);              //disable copy
@@ -79,7 +79,6 @@ public:
     virtual ~ShmMQProducer();
     virtual ErrorCode init(int shmKey, int shmSize);
     virtual ErrorCode clearMQ();
-
     virtual ErrorCode produce(const void* data, uint32_t dataLen);
     virtual ErrorCode getstat(MQStat &mqStat) {
         if (unlikely(!mq_)) return kErrShmNotInit;
@@ -122,10 +121,9 @@ public:
     ShmMQComsumer();
     virtual ~ShmMQComsumer();
     virtual ErrorCode init(int shmKey, int shmSize);
-    virtual ErrorCode clear();
+    virtual ErrorCode clearMQ();
     virtual ErrorCode comsume(void* buf, uint32_t bufSize, uint32_t& dataLen);
-    virtual ErrorCode getstat(MQStat &mqStat)
-    {
+    virtual ErrorCode getstat(MQStat &mqStat) {
         if (unlikely(!mq_)) return kErrShmNotInit;
         return mq_->getstat(mqStat);
     }

@@ -18,7 +18,13 @@ OI_OBJS_READER  = hashtable_reader.o
 BINARY_WRITER := writer
 OI_OBJS_WRITER = hashtable_writer.o
 
-all:$(BINARY_READER) $(BINARY_WRITER)
+BINARY_SMQ_CON := sconsumer
+OI_OBJS_SMQ_CON  = mq_single_consumer.o
+
+BINARY_SMQ_PRO := sproducer
+OI_OBJS_SMQ_PRO = mq_single_producer.o
+
+all:$(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO)
 
 .cc.o:
 	$(CXX) $(CFLAGS) -c $^ -o ./$@ $(LIB_COMM)
@@ -29,5 +35,11 @@ $(BINARY_READER):$(OI_OBJS_READER)
 $(BINARY_WRITER):$(OI_OBJS_WRITER)
 	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
 
+$(BINARY_SMQ_CON):$(OI_OBJS_SMQ_CON)
+	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
+
+$(BINARY_SMQ_PRO):$(OI_OBJS_SMQ_PRO)
+	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
+
 clean:
-	rm -f *.o $(BINARY_READER) $(BINARY_WRITER)
+	rm -f *.o $(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO)

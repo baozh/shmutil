@@ -565,7 +565,7 @@ void ShmMQComsumer::fini()
     }
 }
 
-ErrorCode ShmMQComsumer::clear()
+ErrorCode ShmMQComsumer::clearMQ()
 {
     if (unlikely(!mq_)) return kErrShmNotInit;
     return mq_->clearMQ();
@@ -630,7 +630,7 @@ ErrorCode ShmMQLockComsumer::clearMQ()
         return kErrLockFileFailed;
     }
 
-    ErrorCode r = ShmMQComsumer::clear();
+    ErrorCode r = ShmMQComsumer::clearMQ();
     flock(mfd_, LOCK_UN);
     return r;
 }
