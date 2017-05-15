@@ -45,31 +45,9 @@ public:
     ErrorCode clearMQ();
     ErrorCode enqueue(const void* data, uint32_t dataLen);
     ErrorCode dequeue(void* buf, uint32_t bufSize, uint32_t& dataLen);
-
-    inline ErrorCode getstat(MQStat& mqStat) {
-        if (unlikely(!isInit())) return kErrShmNotInit;
-        uint32_t head = *head_;
-        uint32_t tail = *tail_;
-        mqStat.usedLen_ = (tail >= head) ? tail - head : tail + blockSize_ - head;
-        mqStat.freeLen_ = head > tail ? head - tail : head + blockSize_ - tail;
-        mqStat.totalLen_ = blockSize_;
-        mqStat.shmKey_ = shmKey_;
-        mqStat.shmId_ = shmId_;
-        mqStat.shmSize_ = shmSize_;
-        return kOk;
-    }
-
-    inline ErrorCode __attribute__((always_inline)) isEmpty(bool& isEmpty) {
-        if (unlikely(!isInit())) return kErrShmNotInit;
-        isEmpty = pstat_->msgCount_.get() == 0;
-        return kOk;
-    }
-
-    inline ErrorCode __attribute__((always_inline)) getMsgCount(int& msgCount) {
-        if (unlikely(!isInit())) return kErrShmNotInit;
-        msgCount = pstat_->msgCount_.get();
-        return kOk;
-    }
+    inline ErrorCode getstat(MQStat& mqStat);
+    inline ErrorCode __attribute__((always_inline)) isEmpty(bool& isEmpty);
+    inline ErrorCode __attribute__((always_inline)) getMsgCount(int& msgCount);
 
 private:
     ShmMQ(const ShmMQ&);              //disable copy
@@ -108,6 +86,10 @@ public:
         return mq_->getstat(mqStat);
     }
 
+private:
+    ShmMQProducer(const ShmMQProducer&);              //disable copy
+    ShmMQProducer& operator=(const ShmMQProducer&);   //disable copy
+
 protected:
     virtual void fini();
     ShmMQ* mq_;
@@ -122,6 +104,10 @@ public:
     ErrorCode init(int shmKey, int shmSize, std::string lockFilePath);
     ErrorCode clearMQ();
     ErrorCode produce(const void* data, uint32_t dataLen);
+
+private:
+    ShmMQLockProducer(const ShmMQLockProducer&);              //disable copy
+    ShmMQLockProducer& operator=(const ShmMQLockProducer&);   //disable copy
 
 protected:
     void fini();
@@ -144,6 +130,10 @@ public:
         return mq_->getstat(mqStat);
     }
 
+private:
+    ShmMQComsumer(const ShmMQComsumer&);              //disable copy
+    ShmMQComsumer& operator=(const ShmMQComsumer&);   //disable copy
+
 protected:
     void fini();
     ShmMQ* mq_;
@@ -158,6 +148,10 @@ public:
     ErrorCode init(int shmKey, int shmSize, std::string lockFilePath);
     ErrorCode comsume(void* buf, uint32_t bufSize, uint32_t& dataLen);
     ErrorCode clearMQ();
+
+private:
+    ShmMQLockComsumer(const ShmMQLockComsumer&);              //disable copy
+    ShmMQLockComsumer& operator=(const ShmMQLockComsumer&);   //disable copy
 
 protected:
     int mfd_;

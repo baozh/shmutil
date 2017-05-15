@@ -1,2 +1,2 @@
 # shmutil
-some utility of shared memory.
+some utilities of shared memory.

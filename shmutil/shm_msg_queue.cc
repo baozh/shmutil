@@ -127,6 +127,34 @@ ErrorCode ShmMQ::init(int shmKey, int shmSize)
     return kOk;
 }
 
+inline ErrorCode ShmMQ::getstat(MQStat& mqStat)
+{
+    if (unlikely(!isInit())) return kErrShmNotInit;
+    uint32_t head = *head_;
+    uint32_t tail = *tail_;
+    mqStat.usedLen_ = (tail >= head) ? tail - head : tail + blockSize_ - head;
+    mqStat.freeLen_ = head > tail ? head - tail : head + blockSize_ - tail;
+    mqStat.totalLen_ = blockSize_;
+    mqStat.shmKey_ = shmKey_;
+    mqStat.shmId_ = shmId_;
+    mqStat.shmSize_ = shmSize_;
+    return kOk;
+}
+
+inline ErrorCode __attribute__((always_inline)) ShmMQ::isEmpty(bool& isEmpty)
+{
+    if (unlikely(!isInit())) return kErrShmNotInit;
+    isEmpty = pstat_->msgCount_.get() == 0;
+    return kOk;
+}
+
+inline ErrorCode __attribute__((always_inline)) ShmMQ::getMsgCount(int& msgCount)
+{
+    if (unlikely(!isInit())) return kErrShmNotInit;
+    msgCount = pstat_->msgCount_.get();
+    return kOk;
+}
+
 ErrorCode ShmMQ::clearMQ()
 {
     if (unlikely(!isInit())) return kErrShmNotInit;
