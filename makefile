@@ -1,8 +1,11 @@
-MAKE := make --no-print-directory
+DIRS = shmutil example
 
-all :
-	@$(MAKE) -f shmutil/makefile clean;
-	@$(MAKE) -f shmutil/makefile;
-	@$(MAKE) -f shmutil/makefile install;
-	@$(MAKE) -f example/makefile clean;
-	@$(MAKE) -f example/makefile;
+all:
+	for d in ${DIRS};do \
+		cd $${d} && make && make install && cd ..;\
+	done
+
+clean:
+	for d in ${DIRS};do \
+		cd $${d} && make clean && cd ..;\
+	done

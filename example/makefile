@@ -24,7 +24,13 @@ OI_OBJS_SMQ_CON  = mq_single_consumer.o
 BINARY_SMQ_PRO := sproducer
 OI_OBJS_SMQ_PRO = mq_single_producer.o
 
-all:$(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO)
+BINARY_MMQ_CON := mconsumer
+OI_OBJS_MMQ_CON  = mq_multi_consumer.o
+
+BINARY_MMQ_PRO := mproducer
+OI_OBJS_MMQ_PRO = mq_multi_producer.o
+
+all:$(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO) $(BINARY_MMQ_CON) $(BINARY_MMQ_PRO)
 
 .cc.o:
 	$(CXX) $(CFLAGS) -c $^ -o ./$@ $(LIB_COMM)
@@ -41,5 +47,13 @@ $(BINARY_SMQ_CON):$(OI_OBJS_SMQ_CON)
 $(BINARY_SMQ_PRO):$(OI_OBJS_SMQ_PRO)
 	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
 
+$(BINARY_MMQ_CON):$(OI_OBJS_MMQ_CON)
+	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
+
+$(BINARY_MMQ_PRO):$(OI_OBJS_MMQ_PRO)
+	$(CXX) $(C_ARGS) -o $@ $^ $(LIB_COMM)
+
+install:
+
 clean:
-	rm -f *.o $(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO)
+	rm -f *.o *.lock $(BINARY_READER) $(BINARY_WRITER) $(BINARY_SMQ_CON) $(BINARY_SMQ_PRO) $(BINARY_MMQ_CON) $(BINARY_MMQ_PRO)
