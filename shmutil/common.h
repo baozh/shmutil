@@ -17,8 +17,18 @@
 #define NEED_MD5_VALUE_LEN 1024
 #define MD5_STR_LEN        16
 
+#ifndef likely
+#define likely(x)  __builtin_expect(!!(x), 1)
+#endif
+#ifndef unlikely
+#define unlikely(x)  __builtin_expect(!!(x), 0)
+#endif
+
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <signal.h>
 
 inline void encodeValueLen(char* buf, uint32_t len)
 {
@@ -44,6 +54,21 @@ inline uint32_t decodeValueLen(const char* buf)
             len += (*reinterpret_cast<const uint8_t*>(buf + i) << i * 8);
     }
     return len;
+}
+
+inline bool checkProcExist(pid_t pid)
+{
+    int ret = kill(pid, 0);
+    if (ret == 0 || errno != ESRCH)
+    {
+        // 存在
+        return true;
+    }
+    else
+    {
+        // 不存在
+        return false;
+    }
 }
 
 #endif //SHMUTIL_COMMON_H

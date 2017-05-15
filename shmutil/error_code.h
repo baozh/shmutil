@@ -22,6 +22,10 @@ enum ErrorCode {
     kErrNotEnoughSpace = 10,
     kErrStoreKVFailed = 11,
     kErrShmNotInit = 12,
+    kErrShmMQEmpty = 13,
+    kErrInputBufNotEnoughSpace = 14,
+    kErrOpenLockFileFailed = 15,
+    kErrLockFileFailed = 16,
 
     kErrOther = 10000,
 };

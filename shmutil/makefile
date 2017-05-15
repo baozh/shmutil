@@ -8,8 +8,8 @@ cxx = g++
 
 CFLAGS = -g -O -Wall  $(INC_COMM_PATH)
 
-OI_CC_OBJS  = $(patsubst %.cc,%.o, $(wildcard ./*.cc))
-OI_C_OBJS  = $(patsubst %.c,%.o, $(wildcard ./*.c))
+SRCS=$(wildcard *.c) $(wildcard *.cc) $(wildcard *.cpp)
+OBJS=$(addsuffix .o, $(basename $(SRCS)))
 
 OUTPUT := libshmutil.a
 
@@ -21,7 +21,7 @@ all:$(OUTPUT)
 .c.o:
 	$(CXX) $(CFLAGS) -o $@ -c $^ $(LIB_COMM)
 
-$(OUTPUT):$(OI_C_OBJS) $(OI_CC_OBJS)
+$(OUTPUT):$(OBJS)
 	ar -rs $@ $^
 
 install:

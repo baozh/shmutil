@@ -20,7 +20,8 @@ class MrswHashtable
 {
 public:
     MrswHashtable();
-    ErrorCode createHashTable(key_t shmkey, int maxSlotNum = 800000, bool isLruEliminate = true);
+    ~MrswHashtable();
+    ErrorCode init(key_t shmkey, int maxSlotNum = 800000, bool isLruEliminate = true);
     ErrorCode getValue(const std::string &key, std::string &val);
     ErrorCode setValue(const std::string &key, const std::string &val);
     ErrorCode isExist(const std::string &key, bool &exist);
