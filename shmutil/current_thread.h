@@ -11,8 +11,6 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <stdint.h>
-
-
 #include <stdio.h>
 
 namespace CurrentThread
