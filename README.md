@@ -30,7 +30,7 @@ Please refer to example directory for how to use it.
 
 ### Thanks
 
-Some ideas is inspired from other open-source projects, thanks for [MSEC][1], [QCONF][2], [libshmcache][3] projects.
+Some ideas are inspired from other open-source projects, thanks for [MSEC][1], [QCONF][2], [libshmcache][3] projects.
 
 [1]: https://github.com/Tencent/MSEC
 
